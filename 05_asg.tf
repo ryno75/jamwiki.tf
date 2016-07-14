@@ -1,0 +1,17 @@
+module "wiki_autoscaling_group" {
+  source                          = "github.com/terraform-community-modules/tf_aws_asg_elb"
+  lc_name                         = "${var.aslc_name}"
+  ami_id                          = "${var.asg_ami}"
+  instance_type                   = "${var.asg_instance_type}"
+  iam_instance_profile            = "${aws_iam_instance_profile.asg_instance_profile.name}"
+  key_name                        = "${var.key_name}"
+  security_group                  = "${module.sg_web.security_group_id_web}"
+  user_data                       = "${file("${path.module}/data/user_data")}"
+  asg_name                        = "${var.asg_name}"
+  asg_number_of_instances         = "${var.asg_number_of_instances}"
+  asg_minimum_number_of_instances = "${var.asg_min_number_of_instances}"
+  load_balancer_names             = "${module.wiki_elb.elb_name}"
+  health_check_type               = "${var.asg_health_check_type}"
+  availability_zones              = "${var.availability_zones}"
+  vpc_zone_subnets                = "${var.private_subnets}"
+}
