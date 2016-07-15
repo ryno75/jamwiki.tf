@@ -1,0 +1,26 @@
+#!/usr/bin/python
+#
+# mkvars
+#
+# Writes TF_VARs to stdout
+# eval this cmd to set them
+#
+from botocore import session
+
+# Get boto default AWS creds
+s = session.Session()
+creds = s.get_credentials()
+
+# Set Terraform AWS creds vars
+print('export TF_VAR_aws_access_key={}'.format(creds.access_key))
+print('export TF_VAR_aws_secret_key={}'.format(creds.secret_key))
+if creds.token:
+    print('export TF_VAR_aws_session_token={}'.format(creds.token))
+# Set Terraform AWS profile var
+profile = s.get_config_variable('profile')
+if profile:
+    print('export TF_VAR_aws_profile={}'.format(profile))
+# Set Terraform AWS region var
+region = s.get_config_variable('region')
+if region:
+    print('export TF_VAR_aws_region={}'.format(region))

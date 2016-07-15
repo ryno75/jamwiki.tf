@@ -4,21 +4,15 @@
 
 variable "aws_region" {
   type        = "string"
-  default     = "us-west-2"
-  description = "AWS Region"
+  default     = "us-west-1"
+  description = "AWS Region to use for provider"
 }
 
-variable "aws_creds_file" {
-  type        = "string"
-  default     = "/home/rkennedy/.aws/credentials"
-  description = "AWS Credentials File"
-}
+variable "aws_secret_key" {}
 
-variable "aws_profile" {
-  type        = "string"
-  default     = "ryno75"
-  description = "AWS Profile"
-}
+variable "aws_access_key" {}
+
+variable "aws_profile" {}
 
 variable "vpc_cidr" {
   type        = "string"
@@ -108,7 +102,7 @@ variable "asg_min_number_of_instances" {
 
 variable "elb_name" {
   type        = "string"
-  default     = "wiki.mcgooglesoft.com"
+  default     = "jamwiki-elb"
   description = "ELB Name"
 }
 

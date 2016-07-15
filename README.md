@@ -6,7 +6,7 @@ Uses remote config to manage state...
 terraform remote config \
   -backend=s3 \
   -backend-config="bucket=tf.states" \
-  -backend-config="key=jamwiki/terraform.tfstate" \
+  -backend-config="key=wiki.mcgooglesoft.com/terraform.tfstate" \
   -backend-config="region=us-west-2"
 ```
 
