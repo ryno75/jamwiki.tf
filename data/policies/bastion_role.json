@@ -1,0 +1,13 @@
+{
+    "Statement": [
+        {
+            "Action": [
+                "ec2:AssociateAddress",
+                "ec2:Describe*",
+                "ec2:ModifyInstanceAttribute"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
