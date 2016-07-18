@@ -14,6 +14,12 @@ variable "aws_access_key" {}
 
 variable "aws_profile" {}
 
+variable "environment" {
+  type        = "string"
+  default     = "dev"
+  description = "The environment of the stack"
+}
+
 variable "vpc_cidr" {
   type        = "string"
   default     = "10.0.0.0/24"
@@ -56,6 +62,12 @@ variable "asg_name" {
   description = "AutoScaling Group Name"
 }
 
+variable "asg_instance_name" {
+  type        = "string"
+  default     = "wiki.mcgooglesoft.com"
+  description = "AutoScaling Group Name"
+}
+
 variable "asg_sg_name" {
   type        = "string"
   default     = "wiki-asg-sg"
@@ -68,10 +80,40 @@ variable "aslc_name" {
   description = "AutoScaling Launch Configuration Name"
 }
 
-variable "asg_ami" {
-  type        = "string"
-  default     = "ami-7172b611"
-  description = "AMI ID. Ensure it is compatible with the instance type. Not all AMIs allow all instance types"
+variable "amazon_ami" {
+  type        = "map"
+  description = "amzn-ami-hvm-2016.03.3.x86_64-gp2"
+  default     = {
+    ap-northeast-1 = "ami-374db956"
+    ap-northeast-2 = "ami-2b408b45"
+    ap-south-1     = "ami-fdbed492"
+    ap-southeast-1 = "ami-a69b49c5"
+    ap-southeast-2 = "ami-10361e73"
+    eu-central-1   = "ami-ea26ce85"
+    eu-west-1      = "ami-f9dd458a"
+    sa-east-1      = "ami-6dd04501"
+    us-east-1      = "ami-7f6aa912"
+    us-west-1      = "ami-594b0f39"
+    us-west-2      = "ami-7172b611"
+  }
+}
+
+variable "ubuntu_ami" {
+  type        = "map"
+  description = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20160627"
+  default     = {
+    ap-northeast-1 = "ami-b7d829d6"
+    ap-northeast-2 = "ami-9a965cf4"
+    ap-south-1     = "ami-7e94fe11"
+    ap-southeast-1 = "ami-fc37e59f"
+    ap-southeast-2 = "ami-a387afc0"
+    eu-central-1   = "ami-26e70c49"
+    eu-west-1      = "ami-a4d44ed7"
+    sa-east-1      = "ami-78a93c14"
+    us-east-1      = "ami-ddf13fb0"
+    us-west-1      = "ami-b20542d2"
+    us-west-2      = "ami-b9ff39d9"
+  }
 }
 
 variable "asg_instance_type" {
@@ -96,6 +138,112 @@ variable "asg_min_number_of_instances" {
   type        = "string"
   default     = 1
   description = "Minimum number of instances in AutoScaling Group"
+}
+
+variable "bastion_instance_type" {
+  type        = "string"
+  default     = "t2.micro"
+  description = "EC2 Instance type, if you change, make sure it is compatible with AMI, not all AMIs allow all instance types "
+}
+
+variable "bastion_sg_name" {
+  type        = "string"
+  default     = "bastion-sg"
+  description = "Bastion Host ASG Security Group Name"
+}
+
+variable "bastion_whitelist" {
+  type        = "string"
+  default     = "98.247.8.3/32,50.199.2.65/32"
+  description = "Comma separated list of CIDRs for Bastion Host SSH access"
+}
+
+variable "bastion_fqdn" {
+  default     = "bastion.mcgooglesoft.com"
+  description = "DNS Domain Name for Bastion host"
+}
+
+variable "rds_engine" {
+  type        = "string"
+  default     = "postgres"
+  description = "RDS Database Engine Type"
+}
+
+variable "rds_engine_version" {
+  type        = "string"
+  default     = "9.5.2"
+  description = "RDS Database Engine Version"
+}
+
+variable "rds_parameter_group" {
+  type        = "string"
+  default     = "default.postgres9.5"
+  description = "RDS Database Instance Allocated Storage (in GB)"
+}
+
+variable "rds_instance_name" {
+  type        = "string"
+  default     = "jamwiki-database"
+  description = "RDS Database Instance Type"
+}
+
+variable "rds_instance_type" {
+  type        = "string"
+  default     = "db.t2.micro"
+  description = "RDS Database Instance Type"
+}
+
+variable "rds_allocated_storage" {
+  type        = "string"
+  default     = "5"
+  description = "RDS Database Instance Allocated Storage (in GB)"
+}
+
+variable "rds_storage_type" {
+  type        = "string"
+  default     = "gp2"
+  description = "RDS Database Instance Storage Type (magnetic, gp2, or io1)"
+}
+
+variable "rds_multi_az" {
+  type        = "string"
+  default     = "false"
+  description = "Launch as MultiAZ RDS instance (true|false)"
+}
+
+variable "rds_sg_name" {
+  type        = "string"
+  default     = "rds-sg"
+  description = "RDS Database Security Group Name"
+}
+
+variable "database_fqdn" {
+  type        = "string"
+  default     = "wikidb.mcgooglesoft.com"
+  description = "DNS CNAME to RDS DB Instance"
+}
+
+variable "database_name" {
+  type        = "string"
+  default     = "jwdb"
+  description = "Database Name"
+}
+
+variable "database_username" {
+  type        = "string"
+  default     = "jwdbadmin"
+  description = "Database Admin Username"
+}
+
+variable "database_password" {
+  type        = "string"
+  description = "Database Admin Password"
+}
+
+variable "database_port" {
+  type        = "string"
+  default     = "5432"
+  description = "RDS Database TCP Port"
 }
 
 // ELB Vars
@@ -154,12 +302,12 @@ variable "hosted_zone_id" {
   description = "AWS Route53 Hosted Zone ID"
 }
 
-variable "domain_name" {
+variable "wiki_fqdn" {
   default     = "wiki.mcgooglesoft.com"
   description = "DNS Domain Name for wiki"
 }
 
 variable "download_url" {
-  default     = "https://depot.mcgooglesoft.com/jamwiki-1.3.2.war"
+  default     = "https://s3-us-west-2.amazonaws.com/jamwiki/src/jamwiki-1.3.2.war"
   description = "URL to download jamwiki war"
 }

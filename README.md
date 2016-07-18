@@ -3,6 +3,7 @@
 Uses remote config to manage state...
 
 ```bash
+eval `./mkvars`
 terraform remote config \
   -backend=s3 \
   -backend-config="bucket=tf.states" \

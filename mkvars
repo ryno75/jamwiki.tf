@@ -12,6 +12,8 @@ s = session.Session()
 creds = s.get_credentials()
 
 # Set Terraform AWS creds vars
+print('export AWS_ACCESS_KEY_ID={}'.format(creds.access_key))
+print('export AWS_SECRET_ACCESS_KEY={}'.format(creds.secret_key))
 print('export TF_VAR_aws_access_key={}'.format(creds.access_key))
 print('export TF_VAR_aws_secret_key={}'.format(creds.secret_key))
 if creds.token:
@@ -23,4 +25,5 @@ if profile:
 # Set Terraform AWS region var
 region = s.get_config_variable('region')
 if region:
+    print('export AWS_DEFAULT_REGION={}'.format(region))
     print('export TF_VAR_aws_region={}'.format(region))
