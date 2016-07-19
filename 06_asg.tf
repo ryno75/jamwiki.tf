@@ -21,6 +21,7 @@ module "wiki_autoscaling_group" {
   asg_minimum_number_of_instances = "${var.asg_min_number_of_instances}"
   load_balancer_names             = "${module.wiki_elb.elb_name}"
   health_check_type               = "${var.asg_health_check_type}"
+  health_check_grace_period       = "${var.asg_health_check_grace_period}"
   availability_zones              = "${var.availability_zones}"
   vpc_zone_subnets                = "${module.vpc.private_subnets}"
 }

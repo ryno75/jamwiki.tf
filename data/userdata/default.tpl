@@ -16,6 +16,12 @@ echo $HOSTNAME > /etc/hostname
 rpm -Uvh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-6.noarch.rpm
 yum install -y puppet-agent
 
+# install r10k
+puppet module install zack/r10k
+curl https://raw.githubusercontent.com/ryno75/puppet_control/prod/r10k_setup.pp > /tmp/r10k_setup.pp
+puppet apply /tmp/r10k_setup.pp
+r10k deploy environment -pv
+
 # install cron job to run puppet agent every 30 minutes on the hour
 echo "0,30 * * * * root puppet apply /etc/puppetlabs/code/environments/${env}/manifests/site.pp" > /etc/cron.d/puppet-agent
 

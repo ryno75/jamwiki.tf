@@ -128,6 +128,12 @@ variable "asg_health_check_type" {
   description = "AutoScaling Health Check type. Either EC2 or ELB."
 }
 
+variable "asg_health_check_grace_period" {
+  type        = "string"
+  default     = "1800"
+  description = "AutoScaling Health Check type. Either EC2 or ELB."
+}
+
 variable "asg_number_of_instances" {
   type        = "string"
   default     = 1
@@ -165,19 +171,19 @@ variable "bastion_fqdn" {
 
 variable "rds_engine" {
   type        = "string"
-  default     = "postgres"
+  default     = "mysql"
   description = "RDS Database Engine Type"
 }
 
 variable "rds_engine_version" {
   type        = "string"
-  default     = "9.5.2"
+  default     = "5.6.27"
   description = "RDS Database Engine Version"
 }
 
 variable "rds_parameter_group" {
   type        = "string"
-  default     = "default.postgres9.5"
+  default     = "default.mysql5.6"
   description = "RDS Database Instance Allocated Storage (in GB)"
 }
 
