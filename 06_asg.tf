@@ -1,8 +1,11 @@
 resource "template_file" "user_data" {
   template = "${file("${path.module}/data/userdata/default.tpl")}"
+
   vars {
-    aws_region = "${var.aws_region}"
-    env        = "${var.environment}"
+    aws_region         = "${var.aws_region}"
+    env                = "${var.environment}"
+    puppet_bucket      = "${var.puppet_bucket}"
+    secrets_key_prefix = "${var.secrets_key_prefix}"
   }
 }
 
@@ -11,7 +14,7 @@ module "wiki_autoscaling_group" {
   lc_name                         = "${var.aslc_name}"
   ami_id                          = "${lookup(var.amazon_ami, var.aws_region)}"
   instance_type                   = "${var.asg_instance_type}"
-  iam_instance_profile            = "${aws_iam_instance_profile.asg_instance_profile.name}"
+  iam_instance_profile            = "${aws_iam_instance_profile.asg.name}"
   key_name                        = "${var.key_name}"
   security_group                  = "${module.sg_wiki.security_group_id_web}"
   user_data                       = "${template_file.user_data.rendered}"
@@ -31,7 +34,7 @@ module "bastion" {
   ami_id           = "${lookup(var.amazon_ami, var.aws_region)}"
   aws_region       = "${var.aws_region}"
   instance_type    = "${var.bastion_instance_type}"
-  instance_profile = "${aws_iam_instance_profile.bastion_instance_profile.name}"
+  instance_profile = "${aws_iam_instance_profile.bastion.name}"
   key_name         = "${var.key_name}"
   security_group   = "${aws_security_group.sg_bastion.id}"
   subnet_ids       = "${module.vpc.public_subnets}"

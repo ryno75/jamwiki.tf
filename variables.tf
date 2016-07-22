@@ -1,5 +1,7 @@
 //-------------------------------------------------------------------
+
 // AWS settings
+
 //-------------------------------------------------------------------
 
 variable "aws_region" {
@@ -54,6 +56,20 @@ variable "key_name" {
   default = "jw-demo"
 }
 
+// Puppet Secrets Bucket Vars
+
+variable "puppet_bucket" {
+  type        = "string"
+  default     = "puppet-depot"
+  description = "Puppet S3 bucket name"
+}
+
+variable "secrets_key_prefix" {
+  type        = "string"
+  default     = "secrets/"
+  description = "Prefix for the secrets location/key in the Puppet S3 bucket"
+}
+
 // AutoScaling Group Vars
 
 variable "asg_name" {
@@ -83,7 +99,8 @@ variable "aslc_name" {
 variable "amazon_ami" {
   type        = "map"
   description = "amzn-ami-hvm-2016.03.3.x86_64-gp2"
-  default     = {
+
+  default = {
     ap-northeast-1 = "ami-374db956"
     ap-northeast-2 = "ami-2b408b45"
     ap-south-1     = "ami-fdbed492"
@@ -101,7 +118,8 @@ variable "amazon_ami" {
 variable "ubuntu_ami" {
   type        = "map"
   description = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20160627"
-  default     = {
+
+  default = {
     ap-northeast-1 = "ami-b7d829d6"
     ap-northeast-2 = "ami-9a965cf4"
     ap-south-1     = "ami-7e94fe11"
@@ -296,7 +314,9 @@ variable "elb_whitelist_cidr" {
 }
 
 //-------------------------------------------------------------------
+
 // App settings
+
 //-------------------------------------------------------------------
 
 variable "user" {

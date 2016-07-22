@@ -1,7 +1,7 @@
 # Compiled files
+.terraform/*
 *.tfstate
 *.tfstate.backup
 *.png
-*.terraform
 *.swp
 *.swo
