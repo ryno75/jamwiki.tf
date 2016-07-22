@@ -332,8 +332,3 @@ variable "wiki_fqdn" {
   default     = "wiki.mcgooglesoft.com"
   description = "DNS Domain Name for wiki"
 }
-
-variable "download_url" {
-  default     = "https://s3-us-west-2.amazonaws.com/jamwiki/src/jamwiki-1.3.2.war"
-  description = "URL to download jamwiki war"
-}
