@@ -18,7 +18,7 @@ variable "aws_profile" {}
 
 variable "environment" {
   type        = "string"
-  default     = "dev"
+  default     = "prod"
   description = "The environment of the stack"
 }
 
@@ -172,13 +172,13 @@ variable "bastion_instance_type" {
 
 variable "bastion_sg_name" {
   type        = "string"
-  default     = "bastion-sg"
+  default     = "bastion-host-sg"
   description = "Bastion Host ASG Security Group Name"
 }
 
 variable "bastion_whitelist" {
   type        = "string"
-  default     = "98.247.8.3/32,50.199.2.65/32"
+  default     = "98.247.8.3/32,4.34.52.162/32"
   description = "Comma separated list of CIDRs for Bastion Host SSH access"
 }
 
@@ -237,7 +237,7 @@ variable "rds_multi_az" {
 
 variable "rds_sg_name" {
   type        = "string"
-  default     = "rds-sg"
+  default     = "rds-instance-sg"
   description = "RDS Database Security Group Name"
 }
 
@@ -266,7 +266,7 @@ variable "database_password" {
 
 variable "database_port" {
   type        = "string"
-  default     = "5432"
+  default     = "3306"
   description = "RDS Database TCP Port"
 }
 
@@ -289,7 +289,7 @@ variable "elb_listener_port" {
 }
 
 variable "elb_instance_port" {
-  default = 8080
+  default = 80
 }
 
 variable "elb_listener_protocol" {
@@ -301,7 +301,7 @@ variable "elb_instance_protocol" {
 }
 
 variable "elb_health_check" {
-  default     = "HTTP:8080/"
+  default     = "HTTP:80/"
   description = "Health check for jamwiki service"
 }
 

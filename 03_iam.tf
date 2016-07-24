@@ -35,6 +35,24 @@ resource "template_file" "puppet_secrets_policy" {
   }
 }
 
+resource "aws_iam_policy" "ec2_api_read" {
+  name        = "ec2_api_read_access"
+  path        = "/"
+  description = "Policy to allow EC2 instances read access to the EC2 API"
+  policy      = "${file("${path.module}/data/policies/ec2_api_read.json")}"
+}
+
+resource "aws_iam_policy_attachment" "ec2_api_read" {
+  name = "ec2_api_read_policy_attachment"
+
+  roles = [
+    "${aws_iam_role.asg_instance_profile.name}",
+    "${aws_iam_role.bastion_instance_profile.name}",
+  ]
+
+  policy_arn = "${aws_iam_policy.ec2_api_read.arn}"
+}
+
 resource "aws_iam_policy" "puppet_secrets" {
   name        = "puppet_secrets_bucket_access"
   path        = "/"
@@ -47,7 +65,7 @@ resource "aws_iam_policy_attachment" "puppet_secrets" {
 
   roles = [
     "${aws_iam_role.asg_instance_profile.name}",
-    "${aws_iam_role.asg_instance_profile.name}",
+    "${aws_iam_role.bastion_instance_profile.name}",
   ]
 
   policy_arn = "${aws_iam_policy.puppet_secrets.arn}"

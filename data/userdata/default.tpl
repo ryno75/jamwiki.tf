@@ -21,17 +21,12 @@ fi
 rpm -Uvh https://yum.puppetlabs.com/puppetlabs-release-pc1-el-6.noarch.rpm
 yum install -y puppet-agent
 
-# install r10k
-puppet module install zack/r10k
-curl https://raw.githubusercontent.com/ryno75/puppet_control/prod/r10k_setup.pp > /tmp/r10k_setup.pp
-puppet apply /tmp/r10k_setup.pp
-r10k deploy environment -pv
-
 # configure puppet masterless
-mkdir -p /etc/puppetlabs/puppet
+mkdir -p /etc/puppetlabs/puppet/keys
+mkdir -p /var/log/puppet_masterless
 mkdir -p /var/lib/puppet_masterless/ssl
 cat << EOF > /etc/puppetlabs/puppet/puppet.conf
-[main]'
+[main]
 environment = ${env}
 logdir = /var/log/puppet_masterless
 vardir = /var/lib/puppet_masterless
@@ -40,10 +35,18 @@ rundir = /var/run/puppet
 factpath = $confdir/facter
 EOF
 
-# download eyaml keys
+# install r10k
+mkdir -m 755 /etc/puppetlabs/code/environments/${env}
+/opt/puppetlabs/puppet/bin/puppet module install zack/r10k
+wget -O /tmp/r10k_setup.pp https://raw.githubusercontent.com/ryno75/puppet_control/prod/r10k_setup.pp
+/opt/puppetlabs/puppet/bin/puppet apply /tmp/r10k_setup.pp
+r10k deploy environment -pv
+
+# install hiera-eyaml download keys
+/opt/puppetlabs/puppet/bin/gem install hiera-eyaml
 aws s3 cp s3://${puppet_bucket}/${secrets_key_prefix}private_key.pkcs7.pem /etc/puppetlabs/puppet/keys/
 aws s3 cp s3://${puppet_bucket}/${secrets_key_prefix}public_key.pkcs7.pem /etc/puppetlabs/puppet/keys/
 chmod 440 /etc/puppetlabs/puppet/keys/*
 
 # run it
-puppet apply /etc/puppetlabs/code/environments/${env}/manifests/site.pp
+/opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/${env}/manifests/site.pp

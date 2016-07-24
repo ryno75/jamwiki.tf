@@ -26,7 +26,7 @@ module "wiki_autoscaling_group" {
   health_check_type               = "${var.asg_health_check_type}"
   health_check_grace_period       = "${var.asg_health_check_grace_period}"
   availability_zones              = "${var.availability_zones}"
-  vpc_zone_subnets                = "${module.vpc.private_subnets}"
+  vpc_zone_subnets                = "${module.vpc.public_subnets}"
 }
 
 module "bastion" {
@@ -36,7 +36,7 @@ module "bastion" {
   instance_type    = "${var.bastion_instance_type}"
   instance_profile = "${aws_iam_instance_profile.bastion.name}"
   key_name         = "${var.key_name}"
-  security_group   = "${aws_security_group.sg_bastion.id}"
+  security_group   = "${aws_security_group.bastion.id}"
   subnet_ids       = "${module.vpc.public_subnets}"
   user_data        = "${template_file.user_data.rendered}"
 }
