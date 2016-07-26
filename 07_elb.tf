@@ -1,7 +1,7 @@
 module "wiki_elb" {
   source              = "github.com/terraform-community-modules/tf_aws_elb/elb_https"
   elb_name            = "${var.elb_name}"
-  elb_security_group  = "${module.sg_elb.security_group_id_web}"
+  elb_security_group  = "${aws_security_group.elb.id}"
   subnet_az1          = "${element(split(",",module.vpc.public_subnets),0)}"
   subnet_az2          = "${element(split(",",module.vpc.public_subnets),1)}"
   backend_port        = "${var.elb_instance_port}"

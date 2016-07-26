@@ -1,15 +1,48 @@
-module "sg_elb" {
-  source              = "github.com/terraform-community-modules/tf_aws_sg//sg_https_only"
-  security_group_name = "${var.elb_sg_name}"
-  vpc_id              = "${module.vpc.vpc_id}"
-  source_cidr_block   = "${var.elb_whitelist_cidr}"
+resource "aws_security_group" "elb" {
+  name        = "${var.elb_sg_name}"
+  description = "Allow inbound TCP ${var.elb_listener_port} traffic to ELB"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress {
+    from_port   = "${var.elb_listener_port}"
+    to_port     = "${var.elb_listener_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${split(",", var.elb_whitelist_cidr)}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
-module "sg_wiki" {
-  source              = "github.com/terraform-community-modules/tf_aws_sg//sg_web"
-  security_group_name = "${var.asg_sg_name}"
-  vpc_id              = "${module.vpc.vpc_id}"
-  source_cidr_block   = "${var.vpc_cidr}"
+resource "aws_security_group" "wiki" {
+  name        = "${var.asg_sg_name}"
+  description = "Allow inbound TCP ${var.elb_instance_port} traffic jamwiki server"
+  vpc_id      = "${module.vpc.vpc_id}"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.vpc_cidr}"]
+  }
+
+  ingress {
+    from_port   = "${var.elb_instance_port}"
+    to_port     = "${var.elb_instance_port}"
+    protocol    = "tcp"
+    cidr_blocks = ["${var.vpc_cidr}"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group" "bastion" {
@@ -41,14 +74,7 @@ resource "aws_security_group" "rds" {
     from_port       = "${var.database_port}"
     to_port         = "${var.database_port}"
     protocol        = "tcp"
-    security_groups = ["${module.sg_wiki.security_group_id_web}"]
-  }
-
-  ingress {
-    from_port   = "${var.database_port}"
-    to_port     = "${var.database_port}"
-    protocol    = "tcp"
-    cidr_blocks = ["${split(",", var.bastion_whitelist)}"]
+    security_groups = ["${aws_security_group.wiki.id}"]
   }
 
   egress {

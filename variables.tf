@@ -301,7 +301,7 @@ variable "elb_instance_protocol" {
 }
 
 variable "elb_health_check" {
-  default     = "HTTP:80/"
+  default     = "TCP:80"
   description = "Health check for jamwiki service"
 }
 

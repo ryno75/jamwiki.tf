@@ -16,7 +16,7 @@ module "wiki_autoscaling_group" {
   instance_type                   = "${var.asg_instance_type}"
   iam_instance_profile            = "${aws_iam_instance_profile.asg.name}"
   key_name                        = "${var.key_name}"
-  security_group                  = "${module.sg_wiki.security_group_id_web}"
+  security_group                  = "${aws_security_group.wiki.id}"
   user_data                       = "${template_file.user_data.rendered}"
   asg_name                        = "${var.asg_name}"
   asg_instance_name               = "${var.asg_instance_name}"
@@ -30,6 +30,7 @@ module "wiki_autoscaling_group" {
 }
 
 module "bastion" {
+  bastion_name     = "${var.bastion_fqdn}"
   source           = "github.com/ryno75/tfm_aws_bastion_asg"
   ami_id           = "${lookup(var.amazon_ami, var.aws_region)}"
   aws_region       = "${var.aws_region}"
