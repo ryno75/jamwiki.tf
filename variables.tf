@@ -178,7 +178,7 @@ variable "bastion_sg_name" {
 
 variable "bastion_whitelist" {
   type        = "string"
-  default     = "98.247.8.3/32,4.34.52.162/32"
+  default     = "98.247.8.3/32,4.34.52.162/32,71.89.205.241/32"
   description = "Comma separated list of CIDRs for Bastion Host SSH access"
 }
 
